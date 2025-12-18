@@ -64,9 +64,9 @@ export function Contact() {
             </div>
 
             <div className="pt-2 text-xs opacity-60">
-              Prefer email?{" "}
-              <a className="underline underline-offset-4" href="mailto:your.email@example.com">
-                your.email@example.com
+              Prefer email?{" "}Email me at:{" "}
+              <a className="underline underline-offset-4" href="mailto:anickita@ltu.edu" target="blank_">
+                anickita@ltu.edu
               </a>
             </div>
           </form>

@@ -2,6 +2,15 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navbar } from "@/components/Navbar";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import type { Metadata } from "next";
+
+
+
+export const metadata: Metadata = {
+  title: "Alexander Nickita | Embedded Software Engineer",
+  description:
+    "Embedded software engineer focused on firmware, real-time systems, and hardware-adjacent software.",
+};
 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
