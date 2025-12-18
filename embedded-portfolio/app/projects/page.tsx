@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { projects } from "@/lib/projects";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Case Studies"
+}
 
 export default function ProjectsIndex() {
   return (
