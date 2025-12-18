@@ -7,10 +7,14 @@ import type { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "Alexander Nickita | Embedded Software Engineer",
+  title: {
+    default: "Alexander Nickita | Embedded Software Engineer",
+    template: "%s | Alexander Nickita",
+  },
   description:
     "Embedded software engineer focused on firmware, real-time systems, and hardware-adjacent software.",
 };
+
 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

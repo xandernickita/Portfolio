@@ -28,7 +28,7 @@ export function DownloadsRow() {
             <Github size={18} />
             <div>
               <div className="text-sm font-medium">GitHub</div>
-              <div className="text-xs opacity-70">@your-handle</div>
+              <div className="text-xs opacity-70">Check out my stuff!</div>
             </div>
           </a>
 

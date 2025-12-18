@@ -162,7 +162,7 @@ export function Navbar() {
         </nav>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer">
           <ThemeToggle />
 
           {/* Mobile menu button */}
