@@ -12,6 +12,9 @@
     "node": ">=20.9.0"
   },
   "dependencies": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
