@@ -8,7 +8,7 @@ export function DownloadsRow() {
         <div className="grid gap-3 rounded-2xl border p-4 md:grid-cols-3">
           <a
             className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:opacity-80 transition"
-            href="/resume.pdf"
+            href="resume/resume.pdf"
             target="_blank"
             rel="noreferrer"
           >
@@ -21,7 +21,7 @@ export function DownloadsRow() {
 
           <a
             className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:opacity-80 transition"
-            href="https://github.com/your-handle"
+            href="https://github.com/xandernickita"
             target="_blank"
             rel="noreferrer"
           >
@@ -34,7 +34,7 @@ export function DownloadsRow() {
 
           <a
             className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:opacity-80 transition"
-            href="https://www.linkedin.com/in/your-handle/"
+            href="https://www.linkedin.com/in/alexander-nickita-ssm®-a318aa174/"
             target="_blank"
             rel="noreferrer"
           >

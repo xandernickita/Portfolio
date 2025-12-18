@@ -129,3 +129,16 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Shows a skip link only when keyboard-focused */
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  transform: translateY(-200%);
+  transition: transform 150ms ease;
+  z-index: 1000;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
