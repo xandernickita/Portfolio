@@ -18,15 +18,17 @@ export function Hero() {
         <div>
           <MotionInView>
             <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">
-              Embedded Software Engineer
-              <span className="opacity-80"> • Systems • Hardware-Adjacent</span>
+              Embedded Software
+              <span className="opacity-80"> • Embedded Systems • </span>
+              <span className="opacity-70">Firmware Engineer</span>
             </h1>
           </MotionInView>
 
           <MotionInView delay={0.08}>
             <p className="mt-4 max-w-xl text-base opacity-80 md:text-lg">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Motivated Embedded Software Engineer based out of the metro-Detroit area. Experienced in 
+              low-level programming and hardware integration, with extensive knowledge in C/C++, Python, 
+              RTOS, CAN, and many other embedded specialties.
             </p>
           </MotionInView>
 

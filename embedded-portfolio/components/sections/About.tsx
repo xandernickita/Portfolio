@@ -17,8 +17,8 @@ export function About() {
       <MotionInView>
         <h2 className="text-2xl font-semibold tracking-tight">About</h2>
         <p className="mt-3 max-w-3xl opacity-80">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
-          odio. Praesent libero. Sed cursus ante dapibus diam.
+          I’m an embedded software engineer focused on building reliable, real-time systems that interact with hardware and the physical world. 
+          I care deeply about constraints, verification, and writing software that behaves predictably outside of ideal conditions.
         </p>
       </MotionInView>
 

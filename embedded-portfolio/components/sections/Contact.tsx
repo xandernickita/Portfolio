@@ -18,7 +18,7 @@ export function Contact() {
       <MotionInView>
         <h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
         <p className="mt-2 opacity-80">
-          Shoot me a message — it’ll go straight to my inbox.
+          Send a message straight to my inbox.
         </p>
       </MotionInView>
 
@@ -34,17 +34,17 @@ export function Contact() {
             />
 
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Name" name="name" placeholder="Your name" required />
-              <Field label="Email" name="email" placeholder="you@email.com" required />
+              <Field label="Name" name="name" placeholder="Full Name" required />
+              <Field label="Email" name="email" placeholder="example@email.com" required />
             </div>
 
-            <Field label="Subject" name="subject" placeholder="What’s up?" />
+            <Field label="Subject" name="subject" placeholder="Hello!" />
 
             <div className="grid gap-2">
               <label className="text-sm font-medium">Message</label>
               <textarea
                 name="message"
-                placeholder="Write your message…"
+                placeholder="Write your message . . ."
                 rows={6}
                 required
                 className="w-full rounded-xl border bg-background px-4 py-3 text-sm outline-none
@@ -59,7 +59,7 @@ export function Contact() {
                   {state.message}
                 </p>
               ) : (
-                <p className="text-sm opacity-60">Typically replies within 1–2 days.</p>
+                <p className="text-sm opacity-60">I'll typically reply within 1–2 days.</p>
               )}
             </div>
 
