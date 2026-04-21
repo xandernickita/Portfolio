@@ -34,7 +34,7 @@ export function DownloadsRow() {
 
           <a
             className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:opacity-80 transition"
-            href="www.linkedin.com/in/alexander-nickita-ssm-a318aa174"
+            href="https://www.linkedin.com/in/alexander-nickita-ssm-a318aa174"
             target="_blank"
             rel="noreferrer"
           >
