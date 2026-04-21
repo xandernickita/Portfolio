@@ -36,12 +36,13 @@ export async function sendContactEmail(
   }
 
   const resendKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL;
-
-  if (!resendKey || !to || !from) {
-    return { ok: false, message: "Server not configured (missing env vars)." };
+  if (!resendKey) {
+    return { ok: false, message: "Server not configured." };
   }
+
+  const to = "anickita@ltu.edu";
+  const from =
+    process.env.CONTACT_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
 
   const resend = new Resend(resendKey);
 
@@ -60,9 +61,9 @@ export async function sendContactEmail(
 
   const { error } = await resend.emails.send({
     from,
-    to: [to],
+    to,
     subject: safeSubject,
-    replyTo: email, // so you can hit "Reply" directly
+    replyTo: email,
     html,
   });
 

@@ -7,13 +7,31 @@ import { Analytics } from "@vercel/analytics/next";
 
 
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexandernickita.com";
+const DESCRIPTION =
+  "Embedded software engineer focused on firmware, real-time systems, and hardware-adjacent software.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Alexander Nickita | Embedded Software Engineer",
     template: "%s | Alexander Nickita",
   },
-  description:
-    "Embedded software engineer focused on firmware, real-time systems, and hardware-adjacent software.",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Alexander Nickita",
+    title: "Alexander Nickita | Embedded Software Engineer",
+    description: DESCRIPTION,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Alexander Nickita" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Alexander Nickita | Embedded Software Engineer",
+    description: DESCRIPTION,
+    images: ["/opengraph-image"],
+  },
 };
 
 

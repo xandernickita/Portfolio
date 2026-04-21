@@ -1,0 +1,5 @@
+# sensitive / do-not-share bevel internals
+.bevel/do_not_share/
+
+# large binaries
+*.exe
