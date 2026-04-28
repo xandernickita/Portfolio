@@ -93,146 +93,373 @@ export default async function ProjectCaseStudy({
         </section>
 
         {/* Full article */}
-        <article className="mt-10 space-y-8">
+        <article className="mt-10 space-y-10">
+
           <Section heading="Background">
             <p className="opacity-80 leading-relaxed">
-              Most TM4C123 tutorials stop at blinking an LED over a USB cable. The goal here was to
-              remove the wire entirely and build a proper wireless interface that a developer could
-              use day-to-day: scan for the COM port, connect, send commands, read responses, and
-              cleanly disconnect — all from either a terminal or a GUI. The HC-05 module was chosen
-              because it pairs as a standard serial port on the host side, which means no custom
-              driver and no protocol library needed on either end.
+              A bare-metal embedded IoT system built on the Texas Instruments TM4C123G LaunchPad.
+              Sensor data is read directly from hardware peripherals, processed in firmware written
+              entirely in C without any Arduino or RTOS libraries, and transmitted wirelessly over
+              Bluetooth Classic (UART) to a Python desktop GUI. The primary goal is to demonstrate
+              practical understanding of UART-based IoT communication, embedded peripheral
+              integration, and cross-platform Bluetooth application development — all without
+              relying on high-level abstraction layers.
             </p>
           </Section>
 
-          <Section heading="Hardware Setup">
-            <p className="opacity-80 leading-relaxed">
-              The HC-05 is wired to UART1 on the TM4C123GH6PM with a standard TX/RX crossover:
-              PB1 (TM4C TX) → HC-05 RX, PB0 (TM4C RX) → HC-05 TX. The module's VCC is supplied
-              from the board's 5 V USB rail; its logic lines are 3.3 V compatible with the TM4C's
-              GPIO, so no level-shifting is required. The onboard RGB LED (PF1 = Red, PF2 = Blue,
-              PF3 = Green) is driven directly from GPIO — LED current falls within the TM4C's
-              8 mA output-drive spec, so no external transistors are needed.
+          <Section heading="Hardware">
+            <p className="opacity-80 leading-relaxed mb-5">
+              The system integrates six external peripherals across GPIO, ADC, and UART interfaces,
+              plus the TM4C{"'"}s onboard RGB LED.
             </p>
-            <div className="mt-4 rounded-2xl border p-4 text-sm font-mono space-y-1 opacity-80">
-              <div>TM4C PB1 (TX) ──── HC-05 RXD</div>
-              <div>TM4C PB0 (RX) ──── HC-05 TXD</div>
-              <div>HC-05 VCC    ──── 5 V (USB)</div>
-              <div>HC-05 GND    ──── GND</div>
-              <div className="pt-1">PF1 → Red LED &nbsp; PF2 → Blue LED &nbsp; PF3 → Green LED</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 pr-4 text-left font-semibold">Component</th>
+                    <th className="py-2 pr-4 text-left font-semibold">Part</th>
+                    <th className="py-2 pr-4 text-left font-semibold">Interface</th>
+                    <th className="py-2 text-left font-semibold">TM4C Pin</th>
+                  </tr>
+                </thead>
+                <tbody className="opacity-80">
+                  {[
+                    ["Microcontroller",    "TM4C123GH6PM LaunchPad", "—",                  "—"],
+                    ["Bluetooth Module",   "HC-05 SPP",              "UART1 (9600 8N1)",    "PB0 (RX), PB1 (TX)"],
+                    ["Temp/Humidity",      "DHT11",                  "1-wire bit-bang",     "PE3"],
+                    ["Ambient Light",      "KY-018 LDR",             "ADC0 AIN1",           "PE2"],
+                    ["PIR Motion Sensor",  "HC-SR501",               "GPIO interrupt",      "PD0"],
+                    ["LED Strip",          "WS2812B × 16",           "GPIO bit-bang",       "PD1"],
+                    ["DC Fan",             "5V brushless, 2-wire",   "GPIO via 2N2222A",    "PC4"],
+                    ["Onboard RGB LED",    "TM4C built-in",          "GPIO",                "PF1/PF2/PF3"],
+                  ].map(([component, part, iface, pin]) => (
+                    <tr key={component} className="border-b last:border-0">
+                      <td className="py-2 pr-4">{component}</td>
+                      <td className="py-2 pr-4 font-mono text-xs">{part}</td>
+                      <td className="py-2 pr-4">{iface}</td>
+                      <td className="py-2 font-mono text-xs">{pin}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mt-6 mb-3 opacity-80 leading-relaxed">Supporting passive components:</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 pr-4 text-left font-semibold">Component</th>
+                    <th className="py-2 pr-4 text-left font-semibold">Value</th>
+                    <th className="py-2 text-left font-semibold">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody className="opacity-80">
+                  {[
+                    ["NPN Transistor", "2N2222A", "Fan motor drive"],
+                    ["Flyback Diode",  "1N4007",  "Fan inductive spike protection"],
+                    ["Resistor",       "1 kΩ",    "Transistor base current limiting"],
+                    ["Resistor",       "10 kΩ",   "DHT11 data line pull-up"],
+                    ["Resistor",       "330 Ω",   "WS2812B data line series termination"],
+                  ].map(([component, value, purpose]) => (
+                    <tr key={component + value} className="border-b last:border-0">
+                      <td className="py-2 pr-4">{component}</td>
+                      <td className="py-2 pr-4 font-mono text-xs">{value}</td>
+                      <td className="py-2">{purpose}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mt-6 rounded-2xl border p-4 text-sm font-mono space-y-1 opacity-80 overflow-x-auto">
+              <div className="font-sans font-semibold not-italic opacity-100 mb-3 text-foreground">Wiring</div>
+              <div>DHT11:    VCC→3.3V  GND→GND  DATA→PE3  [10kΩ pull-up to 3.3V]</div>
+              <div>KY-018:   VIN→3.3V  GND→GND  SIG→PE2</div>
+              <div>HC-SR501: VCC→5V    GND→GND  OUT→PD0</div>
+              <div>WS2812B:  5V→5V     GND→GND  DIN→[330Ω]→PD1</div>
+              <div>Fan(+):   5V rail</div>
+              <div>Fan(-):   2N2222A Collector</div>
+              <div>2N2222A:  Base→[1kΩ]→PC4   Emitter→GND</div>
+              <div>1N4007:   Cathode→Fan(+)   Anode→Fan(-)</div>
+              <div>HC-05:    VCC→5V    GND→GND  TX→PB0    RX→PB1</div>
             </div>
           </Section>
 
           <Section heading="Firmware Architecture">
-            <p className="opacity-80 leading-relaxed">
-              The firmware is a single-file bare-metal C application built for the TM4C123GH6PM
-              without an RTOS. On startup it configures the PLL for 80 MHz, initializes
-              UART1 to 9600-8-N-1, enables PF1/PF2/PF3 as push-pull outputs, then emits{" "}
-              <Code>SYSTEM STATUS: READY\r\n</Code> to signal a clean bring-up. This boot message
-              is the first thing to verify on any new hardware setup — if it's missing, the problem
-              is upstream of the command handler (baud rate, wiring, power).
+            <p className="opacity-80 leading-relaxed mb-4">
+              The firmware is a single bare-metal C file targeting the TM4C123GH6PM at 80 MHz
+              (PLL configured). No RTOS, no Arduino libraries — all peripheral drivers are written
+              from scratch using TivaWare DriverLib, compiled with{" "}
+              <Code>-O2</Code> (required for WS2812B bit-bang timing).
             </p>
-            <p className="mt-3 opacity-80 leading-relaxed">
-              The main loop pulls bytes from the UART FIFO into a 64-byte line buffer. When a
-              newline arrives, the accumulated string is null-terminated and dispatched to the
-              command handler via a linear search over a static command table. Every recognized
-              command writes its response back over UART1 before returning. Unrecognized input
-              returns <Code>ERR UNKNOWN_CMD</Code> without hanging or corrupting the buffer — a
-              deliberate choice to make malformed input safe to send during development.
+            <div className="rounded-2xl border p-4 text-sm font-mono space-y-0.5 opacity-80 mb-6 overflow-x-auto">
+              <div>main()</div>
+              <div className="pl-4">├── Peripheral Init (GPIO, ADC, UART1, SysTick, WDT0)</div>
+              <div className="pl-4">├── HC-05 Boot Delay (~2s, blue LED indicator)</div>
+              <div className="pl-4">├── Watchdog Arm</div>
+              <div className="pl-4">└── Main Loop</div>
+              <div className="pl-10">├── watchdog_pet()</div>
+              <div className="pl-10">├── Motion event handler  →  LED state machine</div>
+              <div className="pl-10">├── LED state machine (IDLE→FLASH×2→STEADY→DIM→OFF)</div>
+              <div className="pl-10">├── Buzzer timer</div>
+              <div className="pl-10">├── Periodic auto-logic (fan threshold, LDR dim) every 5s</div>
+              <div className="pl-10">└── UART command handler  →  handle_cmd()</div>
+            </div>
+            <div className="rounded-2xl border overflow-hidden">
+              <Image
+                src="/images/Firmware_ISR.png"
+                alt="Firmware ISR Architecture & Peripheral Drivers"
+                width={1400}
+                height={1000}
+                className="w-full h-auto"
+              />
+            </div>
+            <p className="mt-2 text-xs opacity-60 text-center">
+              Firmware ISR architecture — covers UART1, GPIOD, SysTick, and WDT0 ISRs; DHT11 1-wire driver; WS2812B 800 kHz bit-bang driver; and the 7-state motion LED FSM.
             </p>
+          </Section>
+
+          <Section heading="Key Design Decisions">
+            <ul className="space-y-3 opacity-80 leading-relaxed">
+              <li>
+                <span className="font-medium text-foreground">Interrupts off during DHT11 reads</span>{" "}
+                — the 1-wire protocol requires µs-accurate timing; SysTick is masked for the ~5 ms read duration.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Interrupts off during WS2812B frame writes</span>{" "}
+                — 800 kHz bit-bang at 16 MHz leaves ~20 cycles per bit; the timing-critical section is ~480 µs for 16 LEDs.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">NOP-based WS2812B timing</span>{" "}
+                — <Code>SysCtlDelay</Code> call overhead (~8 cycles) is too coarse for the short T0H pulse; inline{" "}
+                <Code>{"__asm(\" NOP\")"}</Code> provides single-cycle precision.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Cached DHT11 readings</span>{" "}
+                — a 2-second re-read guard prevents 1-wire protocol violations; all STATE queries serve cached data.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Motion LED state machine</span>{" "}
+                — a 7-state FSM handles first-trigger flash sequence, steady-on, dim warning, and auto-off; re-trigger
+                silently resets the timer without re-flashing, preventing strobe effect when someone is actively in the room.
+              </li>
+            </ul>
           </Section>
 
           <Section heading="Command Protocol">
+            <p className="opacity-80 leading-relaxed mb-5">
+              All communication is ASCII over Bluetooth UART at 9600 8N1. Commands are{" "}
+              <Code>{`\\n`}</Code>-terminated; responses are <Code>{`\\r\\n`}</Code>-terminated.
+              The protocol is intentionally human-readable so it can be driven from any serial terminal.
+            </p>
+
+            <h3 className="text-base font-semibold mb-3">Host → Device</h3>
+            <div className="overflow-x-auto mb-8">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 pr-6 text-left font-semibold font-mono">Command</th>
+                    <th className="py-2 text-left font-semibold">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="opacity-80">
+                  {[
+                    ["PING",           "Heartbeat check"],
+                    ["STATE",          "Full system state snapshot"],
+                    ["TEMP",           "Current temperature (°F)"],
+                    ["HUMID",          "Current humidity (%)"],
+                    ["LIGHT",          "Ambient light level (0–100%)"],
+                    ["FAN0",           "Manual fan off"],
+                    ["FAN1",           "Manual fan on"],
+                    ["FAN_AUTO",       "Return fan to auto-threshold mode"],
+                    ["FANTHRESH:XX",   "Set fan trigger temperature in °F (60–100)"],
+                    ["MOTION_ARM",     "Arm PIR sensor"],
+                    ["MOTION_DISARM",  "Disarm PIR sensor"],
+                    ["LED_ON",         "Turn LED strip on (white, current brightness)"],
+                    ["LED_OFF",        "Turn LED strip off"],
+                    ["LED_BRIGHT:XX",  "Set LED brightness 0–100"],
+                    ["LDR_AUTO",       "Return LED to ambient-light auto-dim"],
+                    ["LDR_MAN:XX",     "Manual brightness override 0–100"],
+                    ["BUZZ:X",         "Buzz for X×100ms"],
+                    ["BUZZ0",          "Stop buzzer"],
+                    ["RGB:xyz",        "Set onboard RGB LED (e.g. RGB:100)"],
+                    ["R0/R1 G0/G1 B0/B1", "Set individual onboard RGB channels"],
+                    ["X",              "All onboard LEDs off"],
+                    ["VERSION",        "Firmware version"],
+                    ["UPTIME",         "Seconds since last boot"],
+                    ["HELP",           "List all commands"],
+                    ["EXIT",           "Close session"],
+                  ].map(([cmd, desc]) => (
+                    <tr key={cmd} className="border-b last:border-0">
+                      <td className="py-2 pr-6 font-mono text-xs">{cmd}</td>
+                      <td className="py-2">{desc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <h3 className="text-base font-semibold mb-3">Device → Host</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 pr-6 text-left font-semibold font-mono">Message</th>
+                    <th className="py-2 text-left font-semibold">Trigger</th>
+                  </tr>
+                </thead>
+                <tbody className="opacity-80">
+                  {[
+                    ["OK PONG",                              "Response to PING"],
+                    ["OK TEMP=72F",                          "Response to TEMP"],
+                    ["OK HUMID=45%",                         "Response to HUMID"],
+                    ["OK LIGHT=63",                          "Response to LIGHT"],
+                    ["OK RGB=xyz TEMP=… FAN=… (full STATE)", "Response to STATE"],
+                    ["EVT MOTION",                           "Unsolicited — PIR triggered"],
+                    ["EVT FAN_ON TEMP=81F",                  "Unsolicited — fan auto-activated"],
+                    ["EVT FAN_OFF",                          "Unsolicited — fan auto-deactivated"],
+                    ["EVT LED_OFF",                          "Unsolicited — motion auto-off timer expired"],
+                    ["EVT WDT_RESET",                        "First message after watchdog reset"],
+                    ["STARTUP TEMP=69F HUMID=29% LIGHT=52",  "Sent once on boot after HC-05 settles"],
+                  ].map(([msg, trigger]) => (
+                    <tr key={msg} className="border-b last:border-0">
+                      <td className="py-2 pr-6 font-mono text-xs">{msg}</td>
+                      <td className="py-2">{trigger}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Section>
+
+          <Section heading="GUI Application">
             <p className="opacity-80 leading-relaxed mb-4">
-              All commands are newline-terminated ASCII strings over UART1 at 9600 baud. The
-              protocol is intentionally human-readable so it can be driven from any serial
-              terminal without special tooling.
+              The Python Tkinter dashboard (<Code>tiva_bt_gui.py</Code>) provides a full control
+              interface. Pair the HC-05 in Windows Bluetooth settings (PIN: <Code>1234</Code>),
+              select the assigned COM port from the dropdown, and click Connect. A 3-second
+              connection timeout watchdog prevents the GUI from freezing on a bad COM port.
             </p>
-            <div className="grid gap-2 md:grid-cols-2">
-              {[
-                { cmd: "HELP",      resp: "Lists all available commands" },
-                { cmd: "STATE",     resp: "Returns current R/G/B bitmask" },
-                { cmd: "PING",      resp: "OK PONG" },
-                { cmd: "VERSION",   resp: "Firmware version string" },
-                { cmd: "UPTIME",    resp: "Milliseconds since boot" },
-                { cmd: "EXIT",      resp: "OK BYE (disconnect ack)" },
-                { cmd: "X",         resp: "All LEDs off → OK" },
-                { cmd: "R0 / R1",   resp: "Red LED off / on → OK" },
-                { cmd: "G0 / G1",   resp: "Green LED off / on → OK" },
-                { cmd: "B0 / B1",   resp: "Blue LED off / on → OK" },
-                { cmd: "RGB:xyz",   resp: "Set all three LEDs at once (e.g. RGB:110)" },
-              ].map(({ cmd, resp }) => (
-                <div key={cmd} className="rounded-xl border px-4 py-3 text-sm">
-                  <span className="font-mono font-medium">{cmd}</span>
-                  <span className="ml-2 opacity-70">— {resp}</span>
-                </div>
-              ))}
+            <div className="rounded-2xl border p-4 text-xs font-mono space-y-0.5 opacity-80 mb-5 overflow-x-auto">
+              <div>┌─────────────────────────────────────────────────────┐</div>
+              <div>│  COM Port [dropdown]   Baud [dropdown]  [Connect]  │</div>
+              <div>│  ● Connected                 Last seen: 2s ago      │</div>
+              <div>├──────────────┬──────────────┬──────────────────────-┤</div>
+              <div>│ TEMPERATURE  │     FAN      │       LIGHTING        │</div>
+              <div>│  72.4 °F     │ Mode: AUTO   │ Motion: ARMED         │</div>
+              <div>│  Humidity:   │ Thresh: 80°F │ LDR: AUTO             │</div>
+              <div>│  [sparkline] │ [slider]     │ Brightness [slider]   │</div>
+              <div>│  [Read Now]  │ FAN ON/OFF   │ STRIP ON / STRIP OFF  │</div>
+              <div>├──────────────┴──────────────┴───────────────────────┤</div>
+              <div>│ RGB Controls         │  Utilities                   │</div>
+              <div>├──────────────────────┴──────────────────────────────┤</div>
+              <div>│ ALERTS                                               │</div>
+              <div>├─────────────────────────────────────────────────────┤</div>
+              <div>│ Serial Log (raw)                         [▼ Hide]   │</div>
+              <div>└─────────────────────────────────────────────────────┘</div>
+            </div>
+            <ul className="space-y-2 opacity-80 leading-relaxed mb-6">
+              <li>
+                <span className="font-medium text-foreground">10-second STATE polling</span>{" "}
+                — all panels update automatically without user interaction.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Temperature sparkline</span>{" "}
+                — scrolling line graph of the last 15 readings.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Software watchdog</span>{" "}
+                — "Last seen" counter; amber warning at 90 s of silence, red at 3 min.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Alert log</span>{" "}
+                — timestamped events (motion, fan auto-on/off, LED auto-off, WDT reset).
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Fan panel</span>{" "}
+                — AUTO/MANUAL mode toggle, threshold slider, manual ON/OFF buttons.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">LED strip panel</span>{" "}
+                — auto-dim toggle, manual brightness slider, STRIP ON/OFF.
+              </li>
+            </ul>
+            <div className="rounded-2xl border overflow-hidden">
+              <Image
+                src="/images/GUI_Application.png"
+                alt="GUI Application Flow"
+                width={1400}
+                height={1000}
+                className="w-full h-auto"
+              />
+            </div>
+            <p className="mt-2 text-xs opacity-60 text-center">
+              GUI application flow — covers connection management with 3-second timeout watchdog, daemon reader thread, 50ms queue drain, periodic timers (STATE poll + software watchdog), and user control event dispatch.
+            </p>
+          </Section>
+
+          <Section heading="Full System Architecture">
+            <p className="opacity-80 leading-relaxed mb-5">
+              End-to-end view across all four layers: Physical Hardware → TM4C Firmware →
+              Bluetooth Transport → Python GUI, with every data and signal path traced between them.
+            </p>
+            <div className="rounded-2xl border overflow-hidden">
+              <Image
+                src="/images/Full_System_Spec.png"
+                alt="Full System Architecture"
+                width={1800}
+                height={1000}
+                className="w-full h-auto"
+              />
             </div>
           </Section>
 
-          <Section heading="Desktop Tools">
+          <Section heading="Motion-Triggered LED Behavior">
+            <p className="opacity-80 leading-relaxed mb-3">On first motion detection (strip was off):</p>
+            <ol className="list-decimal list-inside space-y-2 opacity-80 pl-2 leading-relaxed mb-5">
+              <li>Strip flashes ON 150 ms, OFF 150 ms (×2) — visual acknowledgment</li>
+              <li>Holds steady white at 100% brightness for 25 seconds</li>
+              <li>Dims to 40% for the final 5 seconds — "turning off soon" warning</li>
+              <li>Strip off; <Code>EVT LED_OFF</Code> sent to the GUI</li>
+            </ol>
             <p className="opacity-80 leading-relaxed">
-              Two Python tools drive the interface. The Tkinter GUI (<Code>tiva_bt_gui.py</Code>)
-              auto-scans available COM ports on launch, connects with one click, then exposes a
-              labeled button for every command alongside a scrolling response log with timestamps.
-              It handles the connect/disconnect lifecycle so the COM port is never left open
-              accidentally — important because only one host process can hold the port at a time.
-            </p>
-            <p className="mt-3 opacity-80 leading-relaxed">
-              The CLI sender (<Code>bluetooth_led_controller.py</Code>) is intentionally minimal:
-              open port, send line, print response, close. It's suited for scripting automated
-              sequences or for quick one-off commands from a terminal without launching the full GUI.
-              Both tools share exactly the same 9600-baud, newline-terminated wire protocol.
+              On re-trigger while the strip is already on: timer silently resets to 30 seconds and
+              brightness restores to 100%. No flash — prevents an annoying strobe effect when
+              someone is actively moving through the room.
             </p>
           </Section>
 
-          <Section heading="Verification">
-            <div className="space-y-3 opacity-80 leading-relaxed">
-              <p>
-                Testing covered three areas:
-              </p>
-              <ol className="list-decimal list-inside space-y-2 pl-2">
-                <li>
-                  <span className="font-medium text-foreground">Command correctness</span> — every
-                  command was sent from both the GUI and CLI, and the response text verified against
-                  spec. Boot message, <Code>OK PONG</Code>, <Code>OK RGB=xyz</Code>, and the
-                  version/uptime strings were all checked.
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">State consistency</span> — after
-                  each LED command, <Code>STATE</Code> was queried and the returned bitmask
-                  confirmed against the expected GPIO state. This catches any off-by-one in the
-                  pin mapping.
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">Robustness</span> — the COM port
-                  was released and re-acquired mid-session to verify reconnect behavior. Malformed
-                  strings (empty lines, random ASCII, truncated commands) were sent to confirm{" "}
-                  <Code>ERR UNKNOWN_CMD</Code> with no hang or buffer corruption.
-                </li>
-              </ol>
-            </div>
+          <Section heading="Known Limitations">
+            <ul className="space-y-3 opacity-80 leading-relaxed">
+              <li>
+                <span className="font-medium text-foreground">DHT11 precision</span>{" "}
+                — ±2°C accuracy, integer-only output. Suitable for indoor ambient monitoring; not for precision applications.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">WS2812B color control</span>{" "}
+                — driver is optimized for white-only output at variable brightness. Full RGB color control exists in firmware but timing at 16 MHz limits reliable color fidelity.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">Single Bluetooth client</span>{" "}
+                — HC-05 SPP supports one paired device at a time. Switching between the Python GUI and an Android app requires re-pairing.
+              </li>
+              <li>
+                <span className="font-medium text-foreground">No persistent configuration</span>{" "}
+                — firmware state (thresholds, mode settings) resets to defaults on every power cycle.
+              </li>
+            </ul>
           </Section>
 
-          <Section heading="Results & Lessons Learned">
-            <p className="opacity-80 leading-relaxed">
-              The system achieved sub-10 ms round-trip latency for all commands at typical desk
-              range and ran 200+ command cycles in regression without a single dropped or corrupted
-              response. The baud rate ceiling (9600) is not a practical limitation for a 15-command
-              control interface — the bottleneck is always human or GUI interaction speed, not the
-              serial link.
-            </p>
-            <p className="mt-3 opacity-80 leading-relaxed">
-              The most valuable design decision was the <Code>SYSTEM STATUS: READY</Code> boot
-              message. On first bring-up of any new board, it immediately confirms that UART,
-              baud rate, and TX/RX wiring are all correct before a single command is sent — cutting
-              bring-up debug time significantly. The most common pitfall is TX/RX swap: if the boot
-              message never arrives, swapping PB0 and PB1 (or the HC-05 side) is the first thing to
-              try. The second most common issue is COM-port contention when both the GUI and a
-              terminal are open at the same time; making that failure mode obvious in the UI is worth
-              the extra few lines.
-            </p>
+          <Section heading="Future Work">
+            <ul className="space-y-2 opacity-80 leading-relaxed list-disc list-inside pl-2">
+              <li>Android app (Kotlin / Jetpack Compose) — bidirectional Bluetooth Classic</li>
+              <li>PWM fan speed control — replacing on/off with proportional control</li>
+              <li>WS2812B full color command support with improved timing</li>
+              <li>EEPROM persistence for threshold and mode settings</li>
+              <li>Multiple sensor nodes via ESP32 mesh</li>
+            </ul>
           </Section>
+
         </article>
 
         {/* Repo link */}

@@ -16,38 +16,32 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "project-alpha",
-    title: "TM4C123 Bluetooth Control Module",
+    title: "TM4C123G Smart Home Controller",
     summary:
-      "A TM4C123GH6PM + HC-05 Bluetooth control system with UART command firmware and a Python desktop GUI for reliable RGB LED control and live serial feedback.",
+      "A bare-metal embedded IoT system on the TM4C123G LaunchPad: DHT11 temperature/humidity, PIR motion, WS2812B LED strip, LDR ambient light, and auto-threshold fan control — all wired over HC-05 Bluetooth UART to a Tkinter dashboard with live sensor panels, a temperature sparkline, and a real-time alert log.",
     coverImage: "/images/img1.jpg",
-    tags: ["Embedded C", "TM4C123", "HC-05", "UART", "Python", "Tkinter"],
+    tags: ["Embedded C", "TM4C123", "HC-05", "UART", "DHT11", "WS2812B", "ADC", "PIR", "Python", "Tkinter", "IoT"],
     problem:
-      "Create a simple but robust wireless control interface for a TM4C123 board that supports both command-line and GUI-based interaction over Bluetooth serial.",
+      "Demonstrate practical understanding of UART-based IoT communication, embedded peripheral integration, and cross-platform Bluetooth application development — all in bare-metal C without Arduino or RTOS abstractions.",
     constraints:
-      "UART1 is fixed at 9600 baud, MCU resources are limited, TX/RX wiring must be correct, and only one host app can hold the COM port at a time.",
+      "No RTOS or Arduino libraries; WS2812B 800 kHz bit-bang at 16 MHz requires interrupt masking (~20 cycles/bit); DHT11 1-wire needs µs-accurate timing; HC-05 SPP allows only one paired client at a time; firmware state resets on every power cycle.",
     architecture:
-      "Firmware on TM4C123 parses line-based UART1 commands and drives PF1/PF2/PF3 RGB outputs, while Python tools (Tkinter GUI + CLI) handle COM scanning, connect/disconnect, command send, and response logging.",
+      "Firmware drives DHT11 (1-wire bit-bang), KY-018 via ADC0, HC-SR501 via GPIO interrupt, WS2812B via NOP-timed bit-bang, and a 2N2222A-switched DC fan; a 7-state motion LED FSM and hardware WDT0 run in the main loop; Python Tkinter GUI polls STATE every 10 s, dispatches unsolicited EVT messages, and provides full manual overrides.",
     verification:
-      "Validated with interactive command tests from both GUI and CLI, boot/status checks, command-response checks (`OK`, `OK PONG`, `OK RGB=xyz`), and troubleshooting scenarios for baud, wiring, and COM-port contention.",
+      "All 25 commands tested from GUI and CLI; STATE queried after each peripheral change to confirm consistency; WDT reset recovery and EVT WDT_RESET receipt verified; software watchdog amber/red thresholds confirmed; motion LED FSM exercised through all 7 states.",
     metrics: [
-      "UART1: 9600 baud",
-      "Command set: 15 commands",
-      "LED channels: 3 (PF1/PF2/PF3)",
+      "Sensors: DHT11, KY-018 LDR, HC-SR501 PIR",
+      "LED strip: 16× WS2812B at 800 kHz",
+      "UART: 9600 8N1 via HC-05",
+      "Commands: 25 (bidirectional ASCII protocol)",
+      "STATE polling: every 10 s",
+      "WDT timeout: 3 s",
+      "Fan hysteresis: 2 °F",
     ],
-    links: { repo: "https://github.com/xandernickita/HC-05-Module-Interface" },
+    links: { repo: "https://github.com/xandernickita/Embedded_IoT_v2.0" },
     body: [
-      "## Background",
-      "Most TM4C123 tutorials stop at blinking an LED over a USB cable. The goal here was to remove the wire entirely and build a proper wireless interface that a developer could actually use day-to-day: scan for the COM port, connect, send commands, read responses, and cleanly disconnect — all from either a terminal or a GUI.",
-      "## Hardware Setup",
-      "The HC-05 module is wired to UART1 on the TM4C123GH6PM: PB1 (TX) crosses to HC-05 RX, PB0 (RX) crosses to HC-05 TX. The module runs on 5 V from the board's USB supply, but its logic pins are 3.3 V compatible with the TM4C's GPIO. The onboard RGB LED (PF1 = Red, PF2 = Blue, PF3 = Green) is driven directly from GPIO without external transistors since the LED current is within spec for the TM4C's output drivers.",
-      "## Firmware Architecture",
-      "The firmware is a single-file bare-metal C application. On startup it initializes the PLL for 80 MHz operation, configures UART1 to 9600-8-N-1, enables PF1/PF2/PF3 as push-pull outputs, and emits `SYSTEM STATUS: READY\\r\\n` to signal a clean boot. The main loop pulls bytes from the UART FIFO into a 64-byte ring buffer. When a newline arrives, the accumulated string is null-terminated and dispatched to the command handler via a simple linear search over a command table. Every recognized command writes its response back over UART1 before returning; unrecognized input returns `ERR UNKNOWN_CMD`.",
-      "## Desktop Tools",
-      "Two Python tools were written to drive the interface. The Tkinter GUI (`tiva_bt_gui.py`) auto-scans available COM ports on launch, lets you pick and connect with one click, then exposes labeled buttons for every command alongside a scrolling response log with timestamps. The CLI sender (`bluetooth_led_controller.py`) is a minimal script — open port, send line, print response, close — suited for scripting or quick interactive use from a terminal. Both share the same 9600-baud, newline-terminated protocol.",
-      "## Verification",
-      "Testing covered three areas. First, command correctness: every command in the set was sent from both the GUI and CLI and the response text verified against the spec (`OK`, `OK PONG`, `OK RGB=xyz`, etc.). Second, state consistency: after each LED command, `STATE` was queried and the returned bitmask confirmed against the expected GPIO state. Third, robustness: the COM port was released and re-acquired mid-session to verify reconnect behavior, and malformed input strings were sent to confirm `ERR UNKNOWN_CMD` with no firmware hang.",
-      "## Results & Lessons",
-      "The system achieved sub-10 ms round-trip latency for all commands at typical desk range and ran 200+ command cycles in regression testing without a single dropped or corrupted response. The most useful design decision turned out to be the `SYSTEM STATUS: READY` boot message: it immediately confirms that UART, baud rate, and wiring are all correct before any command is sent, cutting debug time dramatically on first bring-up. The main gotcha is COM-port exclusivity — only one host process can hold the port at a time, which is worth calling out clearly in the tool's UI.",
+      "## Overview",
+      "A bare-metal embedded IoT system on the TM4C123G LaunchPad connecting multiple hardware peripherals to a Python Tkinter dashboard over Bluetooth Classic UART — no RTOS, no Arduino libraries.",
     ],
   },
   {
