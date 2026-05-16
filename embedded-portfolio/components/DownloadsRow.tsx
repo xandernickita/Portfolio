@@ -8,7 +8,7 @@ export function DownloadsRow() {
         <div className="grid gap-3 rounded-2xl border p-4 md:grid-cols-3">
           <a
             className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:opacity-80 transition"
-            href="resume/resume.pdf"
+            href="resume/Alexander_Nickita_Resume.pdf"
             target="_blank"
             rel="noreferrer"
           >
