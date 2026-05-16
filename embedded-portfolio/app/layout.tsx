@@ -4,7 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexandernickita.com";
