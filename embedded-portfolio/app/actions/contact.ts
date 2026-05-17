@@ -40,7 +40,8 @@ export async function sendContactEmail(
     return { ok: false, message: "Server not configured." };
   }
 
-  const to = "anickita@ltu.edu";
+  const to =
+    process.env.CONTACT_TO_EMAIL ?? "anickita@ltu.edu";
   const from =
     process.env.CONTACT_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
 
