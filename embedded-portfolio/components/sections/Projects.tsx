@@ -5,96 +5,107 @@ import { projects } from "@/lib/projects";
 
 export function Projects() {
   return (
-    <section id="projects" className="mt-16 scroll-mt-24">
+    <section id="projects" className="mt-20 scroll-mt-24">
       <MotionInView>
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-            <p className="mt-2 opacity-80">
-              Problem → Constraints → Architecture → Verification (with a couple
-              metrics).
-            </p>
-          </div>
+        <div className="flex items-center gap-3 mb-8">
+          <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
+          <div className="h-px flex-1 bg-border" />
           <Link
             href="/projects"
-            className="hidden rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition md:inline-flex"
+            className="btn-secondary hidden md:inline-flex whitespace-nowrap"
           >
             All case studies
           </Link>
         </div>
       </MotionInView>
 
-      <div className="mt-8 grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-2">
         {projects.slice(0, 4).map((p, idx) => (
-          <MotionInView key={p.slug} delay={idx * 0.05}>
+          <MotionInView key={p.slug} delay={idx * 0.06}>
             {p.comingSoon ? (
-              <div className="overflow-hidden rounded-2xl border border-dashed opacity-60 h-full">
-                <div className="relative h-44 bg-muted flex items-center justify-center">
-                  <span className="text-sm font-medium tracking-widest uppercase opacity-50">
-                    In Progress
+              <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-dashed opacity-50 transition hover:opacity-70">
+                <div className="flex h-44 items-center justify-center bg-muted">
+                  <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                    In progress
                   </span>
                 </div>
-                <div className="p-5 flex flex-col justify-center min-h-[10rem]">
-                  <h3 className="text-lg font-semibold">{p.title}</h3>
-                  <p className="mt-2 text-sm opacity-70">{p.summary}</p>
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="text-base font-semibold">{p.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {p.summary}
+                  </p>
                 </div>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-2xl border">
-                <div className="relative h-44">
+              <div className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-200 hover:border-accent/40 hover:shadow-[0_6px_28px_oklch(0.62_0.145_65/0.10)] hover:-translate-y-0.5">
+                {/* Cover image */}
+                <div className="relative h-44 overflow-hidden">
                   <Image
                     src={p.coverImage}
                     alt={p.title}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>
-                <div className="p-5">
-                  <div className="flex flex-wrap gap-2">
+
+                {/* Content */}
+                <div className="flex flex-1 flex-col p-5">
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1.5">
                     {p.tags.slice(0, 4).map((t) => (
                       <span
                         key={t}
-                        className="rounded-xl border px-2 py-0.5 text-xs opacity-80"
+                        className="rounded-md border bg-muted px-2 py-0.5 text-xs text-muted-foreground"
                       >
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  <h3 className="mt-3 text-lg font-semibold">{p.title}</h3>
-                  <p className="mt-2 text-sm opacity-80">{p.summary}</p>
+                  <h3 className="mt-3 text-base font-semibold leading-snug">
+                    {p.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                    {p.summary}
+                  </p>
 
-                  <div className="mt-4 grid gap-2 text-sm">
-                    <div>
+                  {/* Problem / constraints */}
+                  <div className="mt-4 grid gap-1.5 text-sm">
+                    <p>
                       <span className="font-medium">Problem:</span>{" "}
-                      <span className="opacity-80">{p.problem}</span>
-                    </div>
-                    <div>
+                      <span className="text-muted-foreground">{p.problem}</span>
+                    </p>
+                    <p>
                       <span className="font-medium">Constraints:</span>{" "}
-                      <span className="opacity-80">{p.constraints}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {p.metrics.map((m) => (
-                        <span
-                          key={m}
-                          className="rounded-xl border px-2 py-0.5 text-xs opacity-80"
-                        >
-                          {m}
-                        </span>
-                      ))}
-                    </div>
+                      <span className="text-muted-foreground">
+                        {p.constraints}
+                      </span>
+                    </p>
                   </div>
 
-                  <div className="mt-5 flex items-center gap-3">
+                  {/* Metrics */}
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {p.metrics.map((m) => (
+                      <span
+                        key={m}
+                        className="rounded-md border border-accent/30 bg-accent/8 px-2 py-0.5 text-xs text-accent"
+                      >
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* CTAs — pinned to bottom */}
+                  <div className="mt-auto pt-5 flex items-center gap-3">
                     <Link
                       href={`/projects/${p.slug}`}
-                      className="rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
+                      className="btn-primary"
                     >
                       Read case study
                     </Link>
                     <a
                       href={p.links.repo}
-                      className="rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
+                      className="btn-secondary"
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -107,6 +118,15 @@ export function Projects() {
           </MotionInView>
         ))}
       </div>
+
+      {/* Mobile link */}
+      <MotionInView delay={0.28}>
+        <div className="mt-6 flex md:hidden">
+          <Link href="/projects" className="btn-secondary w-full justify-center">
+            All case studies
+          </Link>
+        </div>
+      </MotionInView>
     </section>
   );
 }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "@/lib/projects";
+import { MotionInView } from "@/components/MotionInView";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -43,60 +44,86 @@ export default async function ProjectCaseStudy({
 
   if (p.slug === "project-alpha") {
     return (
-      <main id="main" className="mx-auto max-w-5xl px-4 pb-20 pt-24">
-        <div className="mb-6">
-          <Link
-            href="/projects"
-            className="inline-flex rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
+      <main id="main" className="mx-auto max-w-5xl px-4 pb-24 pt-24">
+        {/* Back link */}
+        <MotionInView>
+          <Link 
+          href="/projects" 
+          className="btn-secondary inline-flex"
           >
             ← Back to case studies
           </Link>
-        </div>
+        </MotionInView>
 
         {/* Cover */}
-        <div className="overflow-hidden rounded-2xl border">
-          <div className="relative h-64 md:h-80">
-            <Image src={p.coverImage} alt={p.title} fill className="object-cover" />
+        <MotionInView delay={0.06}>
+          <div className="mt-6 overflow-hidden rounded-2xl border">
+            <div className="relative h-64 md:h-80">
+              <Image
+                src={p.coverImage}
+                alt={p.title}
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
-        </div>
+        </MotionInView>
 
         {/* Header */}
-        <h1 className="mt-6 text-3xl font-semibold tracking-tight md:text-4xl">{p.title}</h1>
-        <p className="mt-3 max-w-3xl opacity-80">{p.summary}</p>
+        <MotionInView delay={0.1}>
+          <h1 className="mt-7 text-3xl font-semibold tracking-tighter leading-tight md:text-4xl">
+            {p.title}
+          </h1>
+          <p className="mt-3 max-w-3xl text-muted-foreground leading-relaxed">
+            {p.summary}
+          </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {p.tags.map((tag) => (
-            <span key={tag} className="rounded-xl border px-3 py-1 text-xs opacity-80">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* At-a-glance cards */}
-        <section className="mt-8 grid gap-4 md:grid-cols-2">
-          <Card title="Problem" content={p.problem} />
-          <Card title="Constraints" content={p.constraints} />
-          <Card title="Architecture" content={p.architecture} />
-          <Card title="Verification" content={p.verification} />
-        </section>
-
-        {/* Key metrics */}
-        <section className="mt-6 rounded-2xl border p-5">
-          <h2 className="text-base font-semibold tracking-tight">Key Metrics</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {p.metrics.map((m) => (
-              <span key={m} className="rounded-xl border px-3 py-1 text-xs opacity-80">
-                {m}
+          <div className="mt-5 flex flex-wrap gap-1.5">
+            {p.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md border bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
+              >
+                {tag}
               </span>
             ))}
           </div>
-        </section>
+        </MotionInView>
+
+        {/* At-a-glance cards */}
+        <MotionInView delay={0.14}>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <Card title="Problem" content={p.problem} />
+            <Card title="Constraints" content={p.constraints} />
+            <Card title="Architecture" content={p.architecture} />
+            <Card title="Verification" content={p.verification} />
+          </div>
+        </MotionInView>
+
+        {/* Key metrics */}
+        <MotionInView delay={0.18}>
+          <div className="mt-5 rounded-2xl border bg-card p-5">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Key metrics
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {p.metrics.map((m) => (
+                <span
+                  key={m}
+                  className="rounded-md border border-accent/30 bg-accent/8 px-2.5 py-0.5 text-xs text-accent"
+                >
+                  {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        </MotionInView>
 
         {/* Full article */}
-        <article className="mt-10 space-y-10">
+        <article className="mt-12 space-y-12">
 
           <Section heading="Background">
-            <p className="opacity-80 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               A bare-metal embedded IoT system built on the Texas Instruments TM4C123G LaunchPad.
               Sensor data is read directly from hardware peripherals, processed in firmware written
               entirely in C without any Arduino or RTOS libraries, and transmitted wirelessly over
@@ -108,7 +135,7 @@ export default async function ProjectCaseStudy({
           </Section>
 
           <Section heading="Hardware">
-            <p className="opacity-80 leading-relaxed mb-5">
+            <p className="text-muted-foreground leading-relaxed mb-5">
               The system integrates six external peripherals across GPIO, ADC, and UART interfaces,
               plus the TM4C{"'"}s onboard RGB LED.
             </p>
@@ -122,7 +149,7 @@ export default async function ProjectCaseStudy({
                     <th className="py-2 text-left font-semibold">TM4C Pin</th>
                   </tr>
                 </thead>
-                <tbody className="opacity-80">
+                <tbody className="text-muted-foreground">
                   {[
                     ["Microcontroller",    "TM4C123GH6PM LaunchPad", "—",                  "—"],
                     ["Bluetooth Module",   "HC-05 SPP",              "UART1 (9600 8N1)",    "PB0 (RX), PB1 (TX)"],
@@ -144,7 +171,9 @@ export default async function ProjectCaseStudy({
               </table>
             </div>
 
-            <p className="mt-6 mb-3 opacity-80 leading-relaxed">Supporting passive components:</p>
+            <p className="mt-6 mb-3 text-muted-foreground leading-relaxed">
+              Supporting passive components:
+            </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
@@ -154,7 +183,7 @@ export default async function ProjectCaseStudy({
                     <th className="py-2 text-left font-semibold">Purpose</th>
                   </tr>
                 </thead>
-                <tbody className="opacity-80">
+                <tbody className="text-muted-foreground">
                   {[
                     ["NPN Transistor", "2N2222A", "Fan motor drive"],
                     ["Flyback Diode",  "1N4007",  "Fan inductive spike protection"],
@@ -172,8 +201,10 @@ export default async function ProjectCaseStudy({
               </table>
             </div>
 
-            <div className="mt-6 rounded-2xl border p-4 text-sm font-mono space-y-1 opacity-80 overflow-x-auto">
-              <div className="font-sans font-semibold not-italic opacity-100 mb-3 text-foreground">Wiring</div>
+            <div className="mt-6 rounded-2xl border bg-card p-4 text-sm font-mono space-y-1 text-muted-foreground overflow-x-auto">
+              <div className="font-sans font-semibold not-italic text-foreground mb-3">
+                Wiring
+              </div>
               <div>DHT11:    VCC→3.3V  GND→GND  DATA→PE3  [10kΩ pull-up to 3.3V]</div>
               <div>KY-018:   VIN→3.3V  GND→GND  SIG→PE2</div>
               <div>HC-SR501: VCC→5V    GND→GND  OUT→PD0</div>
@@ -186,14 +217,14 @@ export default async function ProjectCaseStudy({
             </div>
           </Section>
 
-          <Section heading="Firmware Architecture">
-            <p className="opacity-80 leading-relaxed mb-4">
+          <Section heading="Firmware architecture">
+            <p className="text-muted-foreground leading-relaxed mb-4">
               The firmware is a single bare-metal C file targeting the TM4C123GH6PM at 80 MHz
               (PLL configured). No RTOS, no Arduino libraries — all peripheral drivers are written
               from scratch using TivaWare DriverLib, compiled with{" "}
               <Code>-O2</Code> (required for WS2812B bit-bang timing).
             </p>
-            <div className="rounded-2xl border p-4 text-sm font-mono space-y-0.5 opacity-80 mb-6 overflow-x-auto">
+            <div className="rounded-2xl border bg-card p-4 text-sm font-mono space-y-0.5 text-muted-foreground mb-6 overflow-x-auto">
               <div>main()</div>
               <div className="pl-4">├── Peripheral Init (GPIO, ADC, UART1, SysTick, WDT0)</div>
               <div className="pl-4">├── HC-05 Boot Delay (~2s, blue LED indicator)</div>
@@ -215,55 +246,67 @@ export default async function ProjectCaseStudy({
                 className="w-full h-auto"
               />
             </div>
-            <p className="mt-2 text-xs opacity-60 text-center">
+            <p className="mt-2 text-xs text-muted-foreground text-center">
               Firmware ISR architecture — covers UART1, GPIOD, SysTick, and WDT0 ISRs; DHT11 1-wire driver; WS2812B 800 kHz bit-bang driver; and the 7-state motion LED FSM.
             </p>
           </Section>
 
-          <Section heading="Key Design Decisions">
-            <ul className="space-y-3 opacity-80 leading-relaxed">
-              <li>
-                <span className="font-medium text-foreground">Interrupts off during DHT11 reads</span>{" "}
-                — the 1-wire protocol requires µs-accurate timing; SysTick is masked for the ~5 ms read duration.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Interrupts off during WS2812B frame writes</span>{" "}
-                — 800 kHz bit-bang at 16 MHz leaves ~20 cycles per bit; the timing-critical section is ~480 µs for 16 LEDs.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">NOP-based WS2812B timing</span>{" "}
-                — <Code>SysCtlDelay</Code> call overhead (~8 cycles) is too coarse for the short T0H pulse; inline{" "}
-                <Code>{"__asm(\" NOP\")"}</Code> provides single-cycle precision.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Cached DHT11 readings</span>{" "}
-                — a 2-second re-read guard prevents 1-wire protocol violations; all STATE queries serve cached data.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Motion LED state machine</span>{" "}
-                — a 7-state FSM handles first-trigger flash sequence, steady-on, dim warning, and auto-off; re-trigger
-                silently resets the timer without re-flashing, preventing strobe effect when someone is actively in the room.
-              </li>
+          <Section heading="Key design decisions">
+            <ul className="space-y-4">
+              {[
+                {
+                  title: "Interrupts off during DHT11 reads",
+                  body: "The 1-wire protocol requires µs-accurate timing; SysTick is masked for the ~5 ms read duration.",
+                },
+                {
+                  title: "Interrupts off during WS2812B frame writes",
+                  body: "800 kHz bit-bang at 16 MHz leaves ~20 cycles per bit; the timing-critical section is ~480 µs for 16 LEDs.",
+                },
+                {
+                  title: "NOP-based WS2812B timing",
+                  body: (
+                    <>
+                      <Code>SysCtlDelay</Code> call overhead (~8 cycles) is too coarse for the short T0H pulse; inline{" "}
+                      <Code>{"__asm(\" NOP\")"}</Code> provides single-cycle precision.
+                    </>
+                  ),
+                },
+                {
+                  title: "Cached DHT11 readings",
+                  body: "A 2-second re-read guard prevents 1-wire protocol violations; all STATE queries serve cached data.",
+                },
+                {
+                  title: "Motion LED state machine",
+                  body: "A 7-state FSM handles first-trigger flash sequence, steady-on, dim warning, and auto-off; re-trigger silently resets the timer without re-flashing, preventing strobe effect when someone is actively in the room.",
+                },
+              ].map((item) => (
+                <li key={item.title} className="rounded-xl border bg-card p-4 text-sm">
+                  <p className="font-medium">{item.title}</p>
+                  <p className="mt-1 text-muted-foreground leading-relaxed">
+                    {item.body}
+                  </p>
+                </li>
+              ))}
             </ul>
           </Section>
 
-          <Section heading="Command Protocol">
-            <p className="opacity-80 leading-relaxed mb-5">
+          <Section heading="Command protocol">
+            <p className="text-muted-foreground leading-relaxed mb-5">
               All communication is ASCII over Bluetooth UART at 9600 8N1. Commands are{" "}
               <Code>{`\\n`}</Code>-terminated; responses are <Code>{`\\r\\n`}</Code>-terminated.
               The protocol is intentionally human-readable so it can be driven from any serial terminal.
             </p>
 
-            <h3 className="text-base font-semibold mb-3">Host → Device</h3>
-            <div className="overflow-x-auto mb-8">
+            <h3 className="text-sm font-semibold mb-3">Host → device</h3>
+            <div className="overflow-x-auto mb-8 rounded-xl border">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="border-b">
-                    <th className="py-2 pr-6 text-left font-semibold font-mono">Command</th>
-                    <th className="py-2 text-left font-semibold">Description</th>
+                  <tr className="border-b bg-muted/50">
+                    <th className="py-2 pl-4 pr-6 text-left font-semibold font-mono text-xs">Command</th>
+                    <th className="py-2 pr-4 text-left font-semibold text-xs">Description</th>
                   </tr>
                 </thead>
-                <tbody className="opacity-80">
+                <tbody className="text-muted-foreground">
                   {[
                     ["PING",           "Heartbeat check"],
                     ["STATE",          "Full system state snapshot"],
@@ -291,25 +334,25 @@ export default async function ProjectCaseStudy({
                     ["HELP",           "List all commands"],
                     ["EXIT",           "Close session"],
                   ].map(([cmd, desc]) => (
-                    <tr key={cmd} className="border-b last:border-0">
-                      <td className="py-2 pr-6 font-mono text-xs">{cmd}</td>
-                      <td className="py-2">{desc}</td>
+                    <tr key={cmd} className="border-b last:border-0 transition hover:bg-muted/30">
+                      <td className="py-2 pl-4 pr-6 font-mono text-xs">{cmd}</td>
+                      <td className="py-2 pr-4 text-xs">{desc}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <h3 className="text-base font-semibold mb-3">Device → Host</h3>
-            <div className="overflow-x-auto">
+            <h3 className="text-sm font-semibold mb-3">Device → host</h3>
+            <div className="overflow-x-auto rounded-xl border">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="border-b">
-                    <th className="py-2 pr-6 text-left font-semibold font-mono">Message</th>
-                    <th className="py-2 text-left font-semibold">Trigger</th>
+                  <tr className="border-b bg-muted/50">
+                    <th className="py-2 pl-4 pr-6 text-left font-semibold font-mono text-xs">Message</th>
+                    <th className="py-2 pr-4 text-left font-semibold text-xs">Trigger</th>
                   </tr>
                 </thead>
-                <tbody className="opacity-80">
+                <tbody className="text-muted-foreground">
                   {[
                     ["OK PONG",                              "Response to PING"],
                     ["OK TEMP=72F",                          "Response to TEMP"],
@@ -323,9 +366,9 @@ export default async function ProjectCaseStudy({
                     ["EVT WDT_RESET",                        "First message after watchdog reset"],
                     ["STARTUP TEMP=69F HUMID=29% LIGHT=52",  "Sent once on boot after HC-05 settles"],
                   ].map(([msg, trigger]) => (
-                    <tr key={msg} className="border-b last:border-0">
-                      <td className="py-2 pr-6 font-mono text-xs">{msg}</td>
-                      <td className="py-2">{trigger}</td>
+                    <tr key={msg} className="border-b last:border-0 transition hover:bg-muted/30">
+                      <td className="py-2 pl-4 pr-6 font-mono text-xs">{msg}</td>
+                      <td className="py-2 pr-4 text-xs">{trigger}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -333,14 +376,14 @@ export default async function ProjectCaseStudy({
             </div>
           </Section>
 
-          <Section heading="GUI Application">
-            <p className="opacity-80 leading-relaxed mb-4">
+          <Section heading="GUI application">
+            <p className="text-muted-foreground leading-relaxed mb-4">
               The Python Tkinter dashboard (<Code>tiva_bt_gui.py</Code>) provides a full control
               interface. Pair the HC-05 in Windows Bluetooth settings (PIN: <Code>1234</Code>),
               select the assigned COM port from the dropdown, and click Connect. A 3-second
               connection timeout watchdog prevents the GUI from freezing on a bad COM port.
             </p>
-            <div className="rounded-2xl border p-4 text-xs font-mono space-y-0.5 opacity-80 mb-5 overflow-x-auto">
+            <div className="rounded-2xl border bg-card p-4 text-xs font-mono space-y-0.5 text-muted-foreground mb-5 overflow-x-auto">
               <div>┌─────────────────────────────────────────────────────┐</div>
               <div>│  COM Port [dropdown]   Baud [dropdown]  [Connect]  │</div>
               <div>│  ● Connected                 Last seen: 2s ago      │</div>
@@ -358,31 +401,23 @@ export default async function ProjectCaseStudy({
               <div>│ Serial Log (raw)                         [▼ Hide]   │</div>
               <div>└─────────────────────────────────────────────────────┘</div>
             </div>
-            <ul className="space-y-2 opacity-80 leading-relaxed mb-6">
-              <li>
-                <span className="font-medium text-foreground">10-second STATE polling</span>{" "}
-                — all panels update automatically without user interaction.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Temperature sparkline</span>{" "}
-                — scrolling line graph of the last 15 readings.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Software watchdog</span>{" "}
-                — "Last seen" counter; amber warning at 90 s of silence, red at 3 min.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Alert log</span>{" "}
-                — timestamped events (motion, fan auto-on/off, LED auto-off, WDT reset).
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Fan panel</span>{" "}
-                — AUTO/MANUAL mode toggle, threshold slider, manual ON/OFF buttons.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">LED strip panel</span>{" "}
-                — auto-dim toggle, manual brightness slider, STRIP ON/OFF.
-              </li>
+            <ul className="space-y-3 mb-6">
+              {[
+                { title: "10-second STATE polling", body: "All panels update automatically without user interaction." },
+                { title: "Temperature sparkline", body: "Scrolling line graph of the last 15 readings." },
+                { title: "Software watchdog", body: "\"Last seen\" counter; amber warning at 90 s of silence, red at 3 min." },
+                { title: "Alert log", body: "Timestamped events (motion, fan auto-on/off, LED auto-off, WDT reset)." },
+                { title: "Fan panel", body: "AUTO/MANUAL mode toggle, threshold slider, manual ON/OFF buttons." },
+                { title: "LED strip panel", body: "Auto-dim toggle, manual brightness slider, STRIP ON/OFF." },
+              ].map((item) => (
+                <li key={item.title} className="flex gap-3 text-sm">
+                  <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent translate-y-1.5" />
+                  <span>
+                    <span className="font-medium">{item.title}</span>
+                    <span className="text-muted-foreground"> — {item.body}</span>
+                  </span>
+                </li>
+              ))}
             </ul>
             <div className="rounded-2xl border overflow-hidden">
               <Image
@@ -393,13 +428,13 @@ export default async function ProjectCaseStudy({
                 className="w-full h-auto"
               />
             </div>
-            <p className="mt-2 text-xs opacity-60 text-center">
-              GUI application flow — covers connection management with 3-second timeout watchdog, daemon reader thread, 50ms queue drain, periodic timers (STATE poll + software watchdog), and user control event dispatch.
+            <p className="mt-2 text-xs text-muted-foreground text-center">
+              GUI application flow — connection management, daemon reader thread, 50 ms queue drain, periodic timers, and user control event dispatch.
             </p>
           </Section>
 
-          <Section heading="Full System Architecture">
-            <p className="opacity-80 leading-relaxed mb-5">
+          <Section heading="Full system architecture">
+            <p className="text-muted-foreground leading-relaxed mb-5">
               End-to-end view across all four layers: Physical Hardware → TM4C Firmware →
               Bluetooth Transport → Python GUI, with every data and signal path traced between them.
             </p>
@@ -414,68 +449,88 @@ export default async function ProjectCaseStudy({
             </div>
           </Section>
 
-          <Section heading="Motion-Triggered LED Behavior">
-            <p className="opacity-80 leading-relaxed mb-3">On first motion detection (strip was off):</p>
-            <ol className="list-decimal list-inside space-y-2 opacity-80 pl-2 leading-relaxed mb-5">
-              <li>Strip flashes ON 150 ms, OFF 150 ms (×2) — visual acknowledgment</li>
-              <li>Holds steady white at 100% brightness for 25 seconds</li>
-              <li>Dims to 40% for the final 5 seconds — "turning off soon" warning</li>
-              <li>Strip off; <Code>EVT LED_OFF</Code> sent to the GUI</li>
+          <Section heading="Motion-triggered LED behavior">
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              On first motion detection (strip was off):
+            </p>
+            <ol className="space-y-2 mb-5 pl-0">
+              {[
+                "Strip flashes ON 150 ms, OFF 150 ms (×2) — visual acknowledgment",
+                "Holds steady white at 100% brightness for 25 seconds",
+                "Dims to 40% for the final 5 seconds — turning off soon",
+                <>Strip off; <Code>EVT LED_OFF</Code> sent to the GUI</>,
+              ].map((step, i) => (
+                <li key={i} className="flex gap-3 text-sm text-muted-foreground">
+                  <span className="shrink-0 font-mono text-accent font-medium">{i + 1}.</span>
+                  <span>{step}</span>
+                </li>
+              ))}
             </ol>
-            <p className="opacity-80 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               On re-trigger while the strip is already on: timer silently resets to 30 seconds and
               brightness restores to 100%. No flash — prevents an annoying strobe effect when
               someone is actively moving through the room.
             </p>
           </Section>
 
-          <Section heading="Known Limitations">
-            <ul className="space-y-3 opacity-80 leading-relaxed">
-              <li>
-                <span className="font-medium text-foreground">DHT11 precision</span>{" "}
-                — ±2°C accuracy, integer-only output. Suitable for indoor ambient monitoring; not for precision applications.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">WS2812B color control</span>{" "}
-                — driver is optimized for white-only output at variable brightness. Full RGB color control exists in firmware but timing at 16 MHz limits reliable color fidelity.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">Single Bluetooth client</span>{" "}
-                — HC-05 SPP supports one paired device at a time. Switching between the Python GUI and an Android app requires re-pairing.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">No persistent configuration</span>{" "}
-                — firmware state (thresholds, mode settings) resets to defaults on every power cycle.
-              </li>
+          <Section heading="Known limitations">
+            <ul className="space-y-3">
+              {[
+                {
+                  title: "DHT11 precision",
+                  body: "±2°C accuracy, integer-only output. Suitable for indoor ambient monitoring; not for precision applications.",
+                },
+                {
+                  title: "WS2812B color control",
+                  body: "Driver is optimized for white-only output at variable brightness. Full RGB color control exists in firmware but timing at 16 MHz limits reliable color fidelity.",
+                },
+                {
+                  title: "Single Bluetooth client",
+                  body: "HC-05 SPP supports one paired device at a time. Switching between the Python GUI and an Android app requires re-pairing.",
+                },
+                {
+                  title: "No persistent configuration",
+                  body: "Firmware state (thresholds, mode settings) resets to defaults on every power cycle.",
+                },
+              ].map((item) => (
+                <li key={item.title} className="rounded-xl border bg-card p-4 text-sm">
+                  <p className="font-medium">{item.title}</p>
+                  <p className="mt-1 text-muted-foreground leading-relaxed">{item.body}</p>
+                </li>
+              ))}
             </ul>
           </Section>
 
-          <Section heading="Future Work">
-            <ul className="space-y-2 opacity-80 leading-relaxed list-disc list-inside pl-2">
-              <li>Android app (Kotlin / Jetpack Compose) — bidirectional Bluetooth Classic</li>
-              <li>PWM fan speed control — replacing on/off with proportional control</li>
-              <li>WS2812B full color command support with improved timing</li>
-              <li>EEPROM persistence for threshold and mode settings</li>
-              <li>Multiple sensor nodes via ESP32 mesh</li>
+          <Section heading="Future work">
+            <ul className="space-y-2">
+              {[
+                "Android app (Kotlin / Jetpack Compose) — bidirectional Bluetooth Classic",
+                "PWM fan speed control — replacing on/off with proportional control",
+                "WS2812B full color command support with improved timing",
+                "EEPROM persistence for threshold and mode settings",
+                "Multiple sensor nodes via ESP32 mesh",
+              ].map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-muted-foreground">
+                  <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent translate-y-1.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
           </Section>
 
         </article>
 
-        {/* Repo link */}
-        <div className="mt-10 flex gap-3">
+        {/* Footer CTAs */}
+        <div className="mt-12 flex gap-3">
           <a
             href={p.links.repo}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
+            className="btn-primary"
           >
-            View repo ↗
+            View repo &#10697;
           </a>
-          <Link
-            href="/projects"
-            className="inline-flex rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
-          >
+          <Link href="/projects" className="btn-secondary">
             ← All case studies
           </Link>
         </div>
@@ -483,52 +538,67 @@ export default async function ProjectCaseStudy({
     );
   }
 
-  // Generic fallback for placeholder projects
+  // Generic fallback for placeholder / coming-soon projects
   return (
-    <main id="main" className="mx-auto max-w-3xl px-4 pb-20 pt-24">
-      <div className="mb-6">
-        <Link
-          href="/projects"
-          className="inline-flex rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
-        >
-          ← Back to case studies
-        </Link>
-      </div>
+    <main id="main" className="mx-auto max-w-3xl px-4 pb-24 pt-24">
+      <Link 
+      href="/projects" 
+      className="btn-secondary inline-flex"
+      >
+        ← Back to case studies
+      </Link>
 
-      <div className="overflow-hidden rounded-2xl border">
+      <div className="mt-6 overflow-hidden rounded-2xl border">
         <div className="relative h-56">
           <Image src={p.coverImage} alt={p.title} fill className="object-cover" />
         </div>
       </div>
 
-      <h1 className="mt-6 text-3xl font-semibold tracking-tight">{p.title}</h1>
-      <p className="mt-2 opacity-80">{p.summary}</p>
+      <h1 className="mt-7 text-3xl font-semibold tracking-tighter">{p.title}</h1>
+      <p className="mt-2 text-muted-foreground leading-relaxed">{p.summary}</p>
 
-      <div className="mt-6 grid gap-3 rounded-2xl border p-5 text-sm">
-        <div><span className="font-medium">Problem:</span> <span className="opacity-80">{p.problem}</span></div>
-        <div><span className="font-medium">Constraints:</span> <span className="opacity-80">{p.constraints}</span></div>
-        <div><span className="font-medium">Architecture:</span> <span className="opacity-80">{p.architecture}</span></div>
-        <div><span className="font-medium">Verification:</span> <span className="opacity-80">{p.verification}</span></div>
-        <div className="flex flex-wrap gap-2">
+      <div className="mt-6 rounded-2xl border bg-card p-5 text-sm space-y-3">
+        <div>
+          <span className="font-medium">Problem:</span>{" "}
+          <span className="text-muted-foreground">{p.problem}</span>
+        </div>
+        <div>
+          <span className="font-medium">Constraints:</span>{" "}
+          <span className="text-muted-foreground">{p.constraints}</span>
+        </div>
+        <div>
+          <span className="font-medium">Architecture:</span>{" "}
+          <span className="text-muted-foreground">{p.architecture}</span>
+        </div>
+        <div>
+          <span className="font-medium">Verification:</span>{" "}
+          <span className="text-muted-foreground">{p.verification}</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5 pt-1">
           {p.metrics.map((m) => (
-            <span key={m} className="rounded-xl border px-2 py-0.5 text-xs opacity-80">
+            <span
+              key={m}
+              className="rounded-md border border-accent/30 bg-accent/8 px-2.5 py-0.5 text-xs text-accent"
+            >
               {m}
             </span>
           ))}
         </div>
-        <div className="pt-2">
-          <a
-            href={p.links.repo}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-xl border px-4 py-2 text-sm hover:opacity-80 transition"
-          >
-            View repo ↗
-          </a>
-        </div>
+        {p.links.repo && (
+          <div className="pt-1">
+            <a
+              href={p.links.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-primary inline-flex"
+            >
+              View repo &#10697;
+            </a>
+          </div>
+        )}
       </div>
 
-      <article className="mt-8 space-y-4 leading-relaxed">
+      <article className="mt-8 space-y-4 leading-relaxed text-muted-foreground">
         {p.body.map((block, i) => (
           <Block key={i} text={block} />
         ))}
@@ -537,11 +607,22 @@ export default async function ProjectCaseStudy({
   );
 }
 
-function Section({ heading, children }: { heading: string; children: React.ReactNode }) {
+function Section({
+  heading,
+  children,
+}: {
+  heading: string;
+  children: React.ReactNode;
+}) {
   return (
     <section>
-      <h2 className="text-xl font-semibold tracking-tight">{heading}</h2>
-      <div className="mt-3">{children}</div>
+      <div className="flex items-center gap-3 mb-5">
+        <h2 className="text-lg font-semibold tracking-tight whitespace-nowrap">
+          {heading}
+        </h2>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+      {children}
     </section>
   );
 }
@@ -556,16 +637,22 @@ function Code({ children }: { children: React.ReactNode }) {
 
 function Card({ title, content }: { title: string; content: string }) {
   return (
-    <div className="rounded-2xl border p-5 text-sm">
-      <h2 className="font-semibold tracking-tight">{title}</h2>
-      <p className="mt-2 opacity-80">{content}</p>
+    <div className="rounded-2xl border bg-card p-5 text-sm">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        {title}
+      </p>
+      <p className="mt-2 leading-relaxed">{content}</p>
     </div>
   );
 }
 
 function Block({ text }: { text: string }) {
   if (text.startsWith("## ")) {
-    return <h2 className="text-xl font-semibold tracking-tight">{text.replace("## ", "")}</h2>;
+    return (
+      <h2 className="text-xl font-semibold tracking-tight text-foreground">
+        {text.replace("## ", "")}
+      </h2>
+    );
   }
-  return <p className="opacity-85">{text}</p>;
+  return <p>{text}</p>;
 }
