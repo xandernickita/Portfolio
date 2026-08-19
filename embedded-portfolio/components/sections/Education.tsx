@@ -5,7 +5,7 @@ const education = [
     monogram: "LTU",
     institution: "Lawrence Technological University",
     location: "Southfield, MI",
-    degree: "Bachelor of Applied Science — Embedded Software Engineering",
+    degree: "Bachelor of Applied Science — Embedded Software Engineering & Mathematics",
     period: "Aug 2024 – Present",
     status: "Expected May 2027",
     honors: "",

@@ -5,6 +5,7 @@ const stack = [
   { label: "Python", hot: true },
   { label: "Java", hot: false },
   { label: "Linux", hot: true },
+  { label: "Yocto Project", hot: true },
   { label: "RTOS", hot: true },
   { label: "I2C / SPI / UART", hot: false },
   { label: "CAN", hot: false },
@@ -24,7 +25,7 @@ const stats = [
   },
   {
     k: "Leadership",
-    v: "IEEE Chapter Chair",
+    v: "IEEE Chapter Chairman"
   },
 ];
 
