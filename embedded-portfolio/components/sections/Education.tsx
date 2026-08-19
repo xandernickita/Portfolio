@@ -45,7 +45,7 @@ export function Education() {
       {/* Timeline */}
       <div className="relative flex flex-col gap-0">
         {/* Vertical line */}
-        <div className="absolute left-[21px] top-6 bottom-6 w-px bg-border md:left-[21px]" />
+        <div className="absolute left-5.25 top-6 bottom-6 w-px bg-border md:left-5.25" />
 
         {education.map((entry, idx) => (
           <MotionInView key={entry.institution} delay={0.06 + idx * 0.1}>
